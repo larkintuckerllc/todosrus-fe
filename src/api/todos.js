@@ -1,12 +1,30 @@
+const urlBase = process.env.REACT_APP_API;
 
 export const getTodos = async () => {
-  return [];
+  const response = await fetch(`${urlBase}/todos`);
+  const todos = await response.json();
+  return todos;
 };
 
-export const postTodo = async (id, name) => {
-  return { id, name };
+export const postTodo = async (name) => {
+  const response = await fetch(
+    `${urlBase}/todos`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        Name: name,
+      }),
+    }
+  );
+  const todo = await response.json();
+  return todo;
 };
 
 export const deleteTodo = async (id) => {
-  return { id };
+  const response = await fetch(`${urlBase}/todos/${id}`, { method: 'DELETE' });
+  await response.json();
+  return { Id: id };
 };

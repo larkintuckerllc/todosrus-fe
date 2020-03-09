@@ -4,11 +4,11 @@ import TodosTodo from './TodosTodo';
 function Todos({ onDelete, todos }) {
   return (
     <ul>
-      {todos.map(({ id, name }) => (
+      {todos.map(({ Id, Name }) => (
         <TodosTodo
-          key={id}
-          id={id}
-          name={name}
+          key={Id}
+          id={Id}
+          name={Name}
           onDelete={onDelete}
         />
       ))}
