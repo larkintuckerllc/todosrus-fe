@@ -1,47 +1,40 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { deleteTodo, getTodos, postTodo } from './api/todos';
-import TodoForm from './components/TodoForm';
-import Todos from './components/Todos';
+import React, { useEffect, useState } from 'react';
+import { loginUrl, postGrant } from './api/auth';
+import Authenticated from './components/Authenticated';
+
+const params = (new URL(document.location)).searchParams;
+const code = params.get('code'); 
 
 function App() {
-  const [todos, setTodos] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [authenticating, setAuthenticating] = useState(code !== null);
+  const [tokens, setTokens] = useState(null);
+
   useEffect(() => {
     const execute = async () => {
+      window.history.replaceState({}, document.title, '/');
       try {
-        const nextTodos = await getTodos();
-        setTodos(nextTodos);
+        const tokens = await postGrant(code);
+        // TODO: REMOVE
+        console.log(tokens);
+        setTokens(tokens);
       } catch (err) {
-        setError(true);
+        // DO NOTHING
       }
-      setLoading(false);
+      setAuthenticating(false);
     };
-    execute();
+    if (authenticating) {
+      execute();
+    }
   }, []);
-  const handleCreate = useCallback(async (name) => {
-    const todo = await postTodo(name);
-    setTodos(todos => [...todos, todo]);
-  }, [setTodos]);
-  const handleDelete = useCallback(async (deleteId) => {
-    await deleteTodo(deleteId);
-    const newTodos = [...todos];
-    const index = newTodos.findIndex(({ Id }) => Id === deleteId);
-    newTodos.splice(index, 1);
-    setTodos(newTodos);
-  }, [setTodos, todos]);
 
-  if (loading) {
-    return <div>Loading...</div>;
+  if (authenticating) {
+    return <div>authenticating...</div>
   }
-  if (error) {
-    return <div>Error Loading...</div>;
+  if (tokens === null) {
+    return <a href={loginUrl}>Login</a>;
   }
   return (
-    <>
-      <TodoForm onCreate={handleCreate} />
-      <Todos onDelete={handleDelete} todos={todos} />
-    </>
+    <Authenticated />
   );
 }
 
