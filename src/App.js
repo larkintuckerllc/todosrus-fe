@@ -22,7 +22,7 @@ function App() {
       }
       setAuthenticating(false);
     };
-    if (authenticating) {
+    if (code !== null) {
       execute();
     }
   }, []);
