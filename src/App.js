@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { loginUrl, postGrant } from './api/auth';
+// import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Authenticated from './components/Authenticated';
 
+/*
 const params = (new URL(document.location)).searchParams;
 const code = params.get('code'); 
+*/
 
 function App() {
-  const [authenticating, setAuthenticating] = useState(code !== null);
-  const [tokens, setTokens] = useState(null);
+  // const [authenticating, setAuthenticating] = useState(code !== null);
+  // const [tokens, setTokens] = useState(null);
 
+  /*
   useEffect(() => {
     const execute = async () => {
       window.history.replaceState({}, document.title, '/');
@@ -33,6 +36,7 @@ function App() {
   if (tokens === null) {
     return <a href={loginUrl}>Login</a>;
   }
+  */
   return (
     <Authenticated />
   );
