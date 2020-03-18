@@ -1,7 +1,21 @@
 const urlBase = process.env.REACT_APP_API;
 
 export const getTodos = async () => {
-  const response = await fetch(`${urlBase}/todos`);
+  const response = await fetch(`${urlBase}/todos`, {
+    /*
+    headers: {
+      Authorization: `iBearer ${idToken}`,
+    },
+    */
+  });
+  if (!response.ok) {
+    if (response.status !== 401) {
+      throw new Error();
+    }
+    // NEW TOKENS
+    console.log('401');
+    return [];
+  }
   const todos = await response.json();
   return todos;
 };

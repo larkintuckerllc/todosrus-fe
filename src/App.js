@@ -1,19 +1,20 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Authenticated from './components/Authenticated';
-import { removeTokens, getTokens, loadTokens, loginUrl } from './api/auth';
+import { getTokens, login, loginUrl, logout } from './api/auth';
 
 const params = (new URL(document.location)).searchParams;
 const code = params.get('code'); 
+const tokens = getTokens();
 
 function App() {
+  const [authenticated, setAuthenticated] = useState(tokens !== null);
   const [authenticating, setAuthenticating] = useState(code !== null);
-  const [tokens, setTokens] = useState(loadTokens());
   useEffect(() => {
     const execute = async () => {
       window.history.replaceState({}, document.title, '/');
       try {
-        const newTokens = await getTokens(code);
-        setTokens(newTokens);
+        await login(code);
+        setAuthenticated(true);
       } catch (err) {
         // DO NOTHING
       }
@@ -24,14 +25,14 @@ function App() {
     }
   }, []);
   const handleClick = useCallback(() => {
-    removeTokens();
-    setTokens(null);
-  }, [setTokens]);
+    logout();
+    setAuthenticated(false);
+  }, [setAuthenticated]);
 
   if (authenticating) {
-    return <div>authenticating...</div>
+    return <div>authenticating...</div>;
   }
-  if (tokens === null) {
+  if (!authenticated) {
     return <a href={loginUrl}>Login</a>;
   }
   return (
