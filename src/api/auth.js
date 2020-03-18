@@ -35,7 +35,9 @@ const clientId = process.env.REACT_APP_AUTH_CLIENT_ID;
 const redirectUri = process.env.REACT_APP_AUTH_REDIRECT_URI;
 const tokenUrl = `${baseUrl}/oauth2/token`;
 
-export const loginUrl = `${baseUrl}/login?scope=${SCOPE}&response_type=code&client_id=${clientId}&code_challenge=${challenge}&code_challenge_method=S256&redirect_uri=${redirectUri}`;
+export const loginUrl = `${baseUrl}/oauth2/authorize?scope=${SCOPE}&response_type=code&client_id=${clientId}&code_challenge=${challenge}&code_challenge_method=S256&redirect_uri=${redirectUri}`;
+
+export const logoutUrl = `${baseUrl}/logout?client_id=${clientId}&logout_uri=${redirectUri}`;
 
 export const refreshTokens = async refreshToken => {
   const body = `grant_type=refresh_token&client_id=${clientId}&refresh_token=${refreshToken}`;
@@ -79,7 +81,7 @@ export const login = async code => {
   };
 };
 
-export const logout = () => {
+export const logout = async () => {
   window.localStorage.removeItem('accessToken');
   window.localStorage.removeItem('idToken');
   window.localStorage.removeItem('refreshToken');

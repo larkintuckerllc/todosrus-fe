@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Authenticated from './components/Authenticated';
-import { getTokens, login, loginUrl, logout } from './api/auth';
+import { getTokens, login, loginUrl, logout, logoutUrl } from './api/auth';
 
 const params = (new URL(document.location)).searchParams;
 const code = params.get('code'); 
@@ -26,8 +26,8 @@ function App() {
   }, []);
   const handleClick = useCallback(() => {
     logout();
-    setAuthenticated(false);
-  }, [setAuthenticated]);
+    window.location.assign(logoutUrl);
+  }, []);
 
   if (authenticating) {
     return <div>authenticating...</div>;
