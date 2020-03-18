@@ -1,25 +1,19 @@
-// import React, { useEffect, useState } from 'react';
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Authenticated from './components/Authenticated';
+import { removeTokens, getTokens, loadTokens, loginUrl } from './api/auth';
 
-/*
 const params = (new URL(document.location)).searchParams;
 const code = params.get('code'); 
-*/
 
 function App() {
-  // const [authenticating, setAuthenticating] = useState(code !== null);
-  // const [tokens, setTokens] = useState(null);
-
-  /*
+  const [authenticating, setAuthenticating] = useState(code !== null);
+  const [tokens, setTokens] = useState(loadTokens());
   useEffect(() => {
     const execute = async () => {
       window.history.replaceState({}, document.title, '/');
       try {
-        const tokens = await postGrant(code);
-        // TODO: REMOVE
-        console.log(tokens);
-        setTokens(tokens);
+        const newTokens = await getTokens(code);
+        setTokens(newTokens);
       } catch (err) {
         // DO NOTHING
       }
@@ -29,6 +23,10 @@ function App() {
       execute();
     }
   }, []);
+  const handleClick = useCallback(() => {
+    removeTokens();
+    setTokens(null);
+  }, [setTokens]);
 
   if (authenticating) {
     return <div>authenticating...</div>
@@ -36,9 +34,13 @@ function App() {
   if (tokens === null) {
     return <a href={loginUrl}>Login</a>;
   }
-  */
   return (
-    <Authenticated />
+    <>
+      <div>
+        <button onClick={handleClick}>Logout</button>
+      </div>
+      <Authenticated />
+    </>
   );
 }
 
