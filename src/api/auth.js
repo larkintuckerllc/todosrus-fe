@@ -37,7 +37,6 @@ const tokenUrl = `${baseUrl}/oauth2/token`;
 
 export const loginUrl = `${baseUrl}/login?scope=${SCOPE}&response_type=code&client_id=${clientId}&code_challenge=${challenge}&code_challenge_method=S256&redirect_uri=${redirectUri}`;
 
-/*
 export const refreshTokens = async refreshToken => {
   const body = `grant_type=refresh_token&client_id=${clientId}&refresh_token=${refreshToken}`;
   const response = await fetch(tokenUrl, {
@@ -45,17 +44,19 @@ export const refreshTokens = async refreshToken => {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body,
   });
+  if (!response.ok) {
+    throw Error();
+  }
   const { access_token, id_token } = await response.json();
   window.localStorage.setItem('accessToken', access_token);
   window.localStorage.setItem('idToken', id_token);
   window.localStorage.setItem('refreshToken', refreshToken);
-  return {
-    accessToken: access_token,
-    idToken: id_token,
+  tokens = {
+    accessToken,
+    idToken,
     refreshToken,
-  }
+  };
 };
-*/
 
 export const login = async code => {
   const body = `grant_type=authorization_code&client_id=${clientId}&code_verifier=${verifier}&code=${code}&redirect_uri=${redirectUri}`;

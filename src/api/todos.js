@@ -1,20 +1,32 @@
+import { getTokens, refreshTokens } from './auth';
+
 const urlBase = process.env.REACT_APP_API;
 
 export const getTodos = async () => {
+  const { idToken, refreshToken } = getTokens();
   const response = await fetch(`${urlBase}/todos`, {
-    /*
     headers: {
-      Authorization: `iBearer ${idToken}`,
+      Authorization: `Bearer ${idToken}`,
     },
-    */
   });
   if (!response.ok) {
     if (response.status !== 401) {
       throw new Error();
     }
-    // NEW TOKENS
-    console.log('401');
-    return [];
+
+    // REFRESH_TOKENS AND RETRY
+    await refreshTokens(refreshToken);
+    const { idToken: retryIdToken } = getTokens();
+    const retryResponse = await fetch(`${urlBase}/todos`, {
+      headers: {
+        Authorization: `Bearer ${retryIdToken}`,
+      },
+    });
+    if (!retryResponse.ok) {
+      throw new Error();
+    }
+    const retryTodos = await retryResponse.json();
+    return retryTodos;
   }
   const todos = await response.json();
   return todos;
