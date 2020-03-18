@@ -73,9 +73,9 @@ export const login = async code => {
   window.localStorage.setItem('idToken', id_token);
   window.localStorage.setItem('refreshToken', refresh_token);
   tokens = {
-    accessToken,
-    idToken,
-    refreshToken,
+    accessToken: access_token,
+    idToken: id_token,
+    refreshToken: refresh_token,
   };
 };
 
