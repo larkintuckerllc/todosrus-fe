@@ -54,8 +54,8 @@ export const refreshTokens = async refreshToken => {
   window.localStorage.setItem('idToken', id_token);
   window.localStorage.setItem('refreshToken', refreshToken);
   tokens = {
-    accessToken,
-    idToken,
+    accessToken: access_token,
+    idToken: id_token,
     refreshToken,
   };
 };
